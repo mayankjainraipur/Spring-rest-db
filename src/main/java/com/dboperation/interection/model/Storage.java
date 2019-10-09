@@ -8,14 +8,17 @@ import java.util.Set;
 
 public class Storage {
 
-    HashMap<Integer, Employee> map;
+    HashMap<Integer, Employee> map = null;
 
     public boolean addEmployee(Employee emp) {
         if(emp!=null && this.checkData(emp)!=false)
         {
-            map=readfile();
+            map=readFile();
+            if (map == null){
+                map = new HashMap<Integer, Employee>();
+            }
             map.put(emp.getId(),emp);
-            writefile(map);
+            writeFile(map);
             return true;
         }
         return false;
@@ -26,41 +29,54 @@ public class Storage {
     }
 
     public Employee getEmployee(int id) {
-        map=readfile();
-        Employee emp = map.get(id);
-        return emp;
+        map=readFile();
+        if (map != null){
+            Employee emp = map.get(id);
+            return emp;
+        }
+        return new Employee();
     }
 
     public boolean updateEmployee(Employee emp) {
-        map=readfile();
-        Employee emp1 = map.get(emp.getId());
-        emp1.setName(emp.getName());
-        emp1.setCompany(emp.getCompany());
-        emp1.setDob(emp.getDob());
-        emp1.setSalary(emp.getSalary());
-        writefile(map);
-        return true;
+        map=readFile();
+        if (map != null){
+            Employee emp1 = map.get(emp.getId());
+            if (emp1.getName() != ""){
+                emp1.setName(emp.getName());
+                emp1.setCompany(emp.getCompany());
+                emp1.setDob(emp.getDob());
+                emp1.setSalary(emp.getSalary());
+                writeFile(map);
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean deleteEmployee(int id) {
-        map=readfile();
-        map.remove(id);
-        writefile(map);
-        return true;
+        map=readFile();
+        if (map !=null){
+            map.remove(id);
+            writeFile(map);
+            return true;
+        }
+        return false;
     }
 
     public List<Employee> listAll() {
-        map=readfile();
         List<Employee>emp = new ArrayList<>();
-        Set<Integer> id = map.keySet();
-        for(Integer i:id)
-        {
-            emp.add(map.get(i));
+        map=readFile();
+        if (map!=null){
+            Set<Integer> id = map.keySet();
+            for(Integer i:id)
+            {
+                emp.add(map.get(i));
+            }
         }
         return emp;
     }
 
-    private HashMap<Integer,Employee> readfile(){
+    private HashMap<Integer,Employee> readFile(){
         try{
             File toRead=new File("output");
             FileInputStream fis=new FileInputStream(toRead);
@@ -68,11 +84,13 @@ public class Storage {
             map= (HashMap<Integer,Employee>)ois.readObject();
             ois.close();
             fis.close();
-        }catch(Exception e){}
+        }catch(Exception e){
+            System.out.println("error");
+        }
         return map;
     }
 
-    private void writefile(HashMap<Integer,Employee> map){
+    private void writeFile(HashMap<Integer,Employee> map){
         try{
             File fileOne=new File("output");
             FileOutputStream fos=new FileOutputStream(fileOne);
@@ -81,6 +99,8 @@ public class Storage {
             oos.flush();
             oos.close();
             fos.close();
-        }catch(Exception e){}
+        }catch(Exception e){
+            System.out.println("error");
+        }
     }
 }

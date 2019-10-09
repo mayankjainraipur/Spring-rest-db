@@ -1,9 +1,10 @@
 package com.dboperation.interection.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Student{
+public class Student implements Serializable {
 
     private String name;     // first name
     private String email;     // email address

@@ -1,9 +1,10 @@
 package com.dboperation.interection.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Employee {
+public class Employee implements Serializable {
 
     private String name, company;
     private double salary;
