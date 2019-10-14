@@ -82,12 +82,9 @@ public class MainController {
     @RequestMapping(value = ApiConstant.DELETE_URL,
             method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable("id") int id) {
-        Storage str = new Storage();
-        boolean res = str.deleteEmployee(id);
-        if (res)
-            return new ResponseEntity(HttpStatus.OK);
-        else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        employeeRepo.deleteById(id);
+        return new ResponseEntity(HttpStatus.OK);
+         //   throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
 
 }
